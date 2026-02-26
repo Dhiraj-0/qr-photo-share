@@ -66,6 +66,17 @@ def generate_qr_code(data):
     return base64.b64encode(buffer.getvalue()).decode()
 
 
+def get_base_url():
+    """
+    Get the base URL for generating QR codes.
+    Uses X-Forwarded-Host header for proper URL in production (behind proxy).
+    """
+    base_url = request.headers.get('X-Forwarded-Host', request.host_url)
+    if not base_url:
+        base_url = request.host_url
+    return base_url.rstrip('/')
+
+
 @app.route('/')
 def index():
     """
@@ -108,8 +119,8 @@ def upload_image():
         with open(filepath, 'wb') as f:
             f.write(image_bytes)
         
-        # Generate unique URL for the image - use explicit domain for production
-        base_url = os.environ.get('APP_URL', request.host_url.rstrip('/'))
+        # Generate unique URL - works automatically in production
+        base_url = get_base_url()
         unique_url = f"{base_url}/img/{filename}"
         
         # Generate QR code
@@ -153,8 +164,8 @@ def upload_file():
         # Save the image
         file.save(filepath)
         
-        # Generate unique URL - use explicit domain for production
-        base_url = os.environ.get('APP_URL', request.host_url.rstrip('/'))
+        # Generate unique URL - works automatically in production
+        base_url = get_base_url()
         unique_url = f"{base_url}/img/{filename}"
         
         # Generate QR code
@@ -213,8 +224,8 @@ def show_qr(filename):
     except ValueError:
         return jsonify({'error': 'Invalid image identifier'}), 404
     
-    # Generate the image URL - use explicit domain for production
-    base_url = os.environ.get('APP_URL', request.host_url.rstrip('/'))
+    # Generate the image URL - works automatically in production
+    base_url = get_base_url()
     image_url = f"{base_url}/img/{filename}"
     
     # Generate QR code
