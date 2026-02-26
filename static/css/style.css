@@ -10,6 +10,10 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -18,7 +22,7 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    padding-bottom: 120px; /* Space for fixed capture button */
+    padding-bottom: 180px; /* Space for fixed bottom section */
 }
 
 /* Container Styles */
@@ -53,7 +57,6 @@ body {
     border-radius: 15px;
     overflow: hidden;
     background: #000;
-    /* Mobile zoom transformation - only applies on mobile */
 }
 
 /* Camera Container */
@@ -278,10 +281,141 @@ body {
 }
 
 /* ============================================
+   FIXED BOTTOM SECTION
+   ============================================ */
+.fixed-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 15px 20px 20px;
+    box-shadow: 0 -5px 30px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+}
+
+/* Mode Selector */
+.mode-selector {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.mode-btn {
+    flex: 1;
+    max-width: 180px;
+    padding: 12px 20px;
+    border: 2px solid #667eea;
+    background: white;
+    color: #667eea;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.mode-btn:hover {
+    background: #f0f0ff;
+}
+
+.mode-btn.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: transparent;
+}
+
+/* Controls Container */
+.controls-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+/* Capture Button */
+.capture-btn {
+    padding: 18px 45px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 8px 30px rgba(102, 126, 234, 0.5);
+    white-space: nowrap;
+}
+
+.capture-btn:hover:not(:disabled) {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6);
+}
+
+.capture-btn:active:not(:disabled) {
+    transform: translateY(0) scale(1);
+}
+
+.capture-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.retake-btn {
+    background: #6c757d;
+    box-shadow: 0 8px 30px rgba(108, 117, 125, 0.5);
+}
+
+.retake-btn:hover:not(:disabled) {
+    box-shadow: 0 12px 35px rgba(108, 117, 125, 0.6);
+}
+
+.upload-btn {
+    background: #28a745;
+    box-shadow: 0 8px 30px rgba(40, 167, 69, 0.5);
+}
+
+.upload-btn:hover:not(:disabled) {
+    box-shadow: 0 12px 35px rgba(40, 167, 69, 0.6);
+}
+
+.gallery-btn {
+    background: #17a2b8;
+    box-shadow: 0 8px 30px rgba(23, 162, 184, 0.5);
+}
+
+.gallery-btn:hover:not(:disabled) {
+    box-shadow: 0 12px 35px rgba(23, 162, 184, 0.6);
+}
+
+/* File Preview */
+.file-preview {
+    position: fixed;
+    bottom: 180px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9998;
+    display: none;
+}
+
+.file-preview.show {
+    display: block;
+}
+
+.file-preview img {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
    MOBILE-SPECIFIC STYLES (max-width: 768px)
    ============================================ */
 @media (max-width: 768px) {
-    /* Prevent viewport zooming */
     html {
         touch-action: manipulation;
         -webkit-text-size-adjust: 100%;
@@ -289,7 +423,7 @@ body {
     
     body {
         padding: 15px;
-        padding-bottom: 100px;
+        padding-bottom: 200px;
     }
     
     .container {
@@ -364,6 +498,34 @@ body {
         font-size: 0.75rem;
         padding: 12px;
     }
+    
+    /* Fixed bottom mobile */
+    .fixed-bottom {
+        padding: 12px 15px 15px;
+    }
+    
+    .mode-selector {
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+    
+    .mode-btn {
+        padding: 10px 15px;
+        font-size: 0.85rem;
+    }
+    
+    .capture-btn {
+        padding: 15px 30px;
+        font-size: 1rem;
+    }
+    
+    .controls-container {
+        gap: 10px;
+    }
+    
+    body {
+        padding-bottom: 190px;
+    }
 }
 
 /* ============================================
@@ -372,7 +534,7 @@ body {
 @media (max-width: 480px) {
     body {
         padding: 10px;
-        padding-bottom: 90px;
+        padding-bottom: 180px;
     }
     
     .container {
@@ -386,6 +548,16 @@ body {
     
     .result {
         transform: scale(0.85);
+    }
+    
+    .mode-btn {
+        padding: 10px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .capture-btn {
+        padding: 14px 25px;
+        font-size: 0.9rem;
     }
 }
 
@@ -414,133 +586,26 @@ body {
     .result {
         transform: none;
     }
-}
-
-/* ============================================
-   CAPTURE BUTTON - Fixed at bottom center
-   ============================================ */
-.capture-button-container {
-    position: fixed;
-    bottom: 25px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 9999;
-    display: flex;
-    gap: 15px;
-    padding: 10px;
-}
-
-.capture-btn {
-    padding: 18px 40px;
-    border: none;
-    border-radius: 50px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    box-shadow: 0 8px 30px rgba(102, 126, 234, 0.5);
-    white-space: nowrap;
-}
-
-.capture-btn:hover:not(:disabled) {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6);
-}
-
-.capture-btn:active:not(:disabled) {
-    transform: translateY(0) scale(1);
-}
-
-.capture-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.retake-btn {
-    background: #6c757d;
-    box-shadow: 0 8px 30px rgba(108, 117, 125, 0.5);
-}
-
-.retake-btn:hover:not(:disabled) {
-    box-shadow: 0 12px 35px rgba(108, 117, 125, 0.6);
-}
-
-.upload-btn {
-    background: #28a745;
-    box-shadow: 0 8px 30px rgba(40, 167, 69, 0.5);
-}
-
-.upload-btn:hover:not(:disabled) {
-    box-shadow: 0 12px 35px rgba(40, 167, 69, 0.6);
-}
-
-/* Mobile capture button adjustments */
-@media (max-width: 768px) {
-    .capture-button-container {
-        bottom: 20px;
-        gap: 10px;
-        padding: 8px;
+    
+    /* Desktop fixed bottom */
+    .fixed-bottom {
+        padding: 20px 40px 25px;
     }
     
-    .capture-btn {
+    .mode-selector {
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .mode-btn {
+        max-width: 220px;
         padding: 15px 30px;
-        font-size: 1rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .capture-button-container {
-        bottom: 15px;
-        gap: 8px;
-        padding: 5px;
     }
     
     .capture-btn {
-        padding: 14px 25px;
-        font-size: 0.9rem;
+        padding: 20px 50px;
+        font-size: 1.2rem;
     }
-}
-
-/* Ensure button is always visible and never hidden */
-.capture-button-container {
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-}
-
-/* Upload from Gallery Section */
-.upload-section {
-    text-align: center;
-    margin: 15px 0;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 10px;
-}
-
-.upload-label {
-    margin-bottom: 10px;
-    color: #666;
-    font-size: 0.9rem;
-}
-
-.upload-section .btn {
-    font-size: 0.9rem;
-    padding: 12px 25px;
-}
-
-.file-preview {
-    margin-top: 15px;
-}
-
-.file-preview img {
-    max-width: 100%;
-    max-height: 200px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 /* View Image Page */
@@ -579,4 +644,29 @@ body {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+/* Buttons */
+.btn {
+    padding: 15px 30px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+    box-shadow: 0 5px 20px rgba(108, 117, 125, 0.4);
 }

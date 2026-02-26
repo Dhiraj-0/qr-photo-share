@@ -27,16 +27,6 @@
             </div>
         </div>
         
-        <!-- Upload from Gallery Section -->
-        <div class="upload-section">
-            <p class="upload-label">Or upload from gallery:</p>
-            <input type="file" id="fileInput" accept="image/*" style="display: none;">
-            <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">
-                📁 Upload from Gallery
-            </button>
-            <div id="filePreview" class="file-preview"></div>
-        </div>
-        
         <!-- Status Message -->
         <div id="status" class="status" style="display: none;"></div>
         
@@ -93,18 +83,42 @@
         </div>
     </div>
     
-    <!-- Capture Button - Fixed at bottom center -->
-    <div class="capture-button-container" id="captureButtonContainer">
-        <button id="captureBtn" class="capture-btn" disabled>
-            📷 Capture
-        </button>
-        <button id="retakeBtn" class="capture-btn retake-btn" style="display: none;">
-            🔄 Retake
-        </button>
-        <button id="uploadBtn" class="capture-btn upload-btn" style="display: none;">
-            ⬆️ Upload
-        </button>
+    <!-- Fixed Bottom Section -->
+    <div class="fixed-bottom">
+        <!-- Mode Selection -->
+        <div class="mode-selector">
+            <button id="cameraModeBtn" class="mode-btn active" onclick="switchToCameraMode()">
+                📷 Camera
+            </button>
+            <button id="galleryModeBtn" class="mode-btn" onclick="switchToGalleryMode()">
+                🖼️ Upload from Gallery
+            </button>
+        </div>
+        
+        <!-- Camera Controls (visible in camera mode) -->
+        <div class="controls-container" id="cameraControls">
+            <button id="captureBtn" class="capture-btn" disabled>
+                📷 Capture
+            </button>
+            <button id="retakeBtn" class="capture-btn retake-btn" style="display: none;">
+                🔄 Retake
+            </button>
+            <button id="uploadBtn" class="capture-btn upload-btn" style="display: none;">
+                ⬆️ Upload
+            </button>
+        </div>
+        
+        <!-- Gallery Controls (visible in gallery mode) -->
+        <div class="controls-container" id="galleryControls" style="display: none;">
+            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+            <button class="capture-btn gallery-btn" onclick="document.getElementById('fileInput').click()">
+                🖼️ Choose Image
+            </button>
+        </div>
     </div>
+    
+    <!-- File preview for gallery -->
+    <div id="filePreview" class="file-preview"></div>
     
     <!-- JavaScript for camera functionality -->
     <script src="{{ url_for('static', filename='js/camera.js') }}"></script>

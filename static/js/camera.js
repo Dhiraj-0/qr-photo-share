@@ -9,6 +9,7 @@ let capturedImage = null;
 let selectedFile = null;
 let currentImageUrl = null;
 let currentQrCode = null;
+let currentMode = 'camera'; // 'camera' or 'gallery'
 
 // DOM Elements
 const video = document.getElementById('video');
@@ -24,7 +25,10 @@ const resultDiv = document.getElementById('result');
 const qrCodeImg = document.getElementById('qrCodeImg');
 const imageUrlLink = document.getElementById('imageUrl');
 const fileInput = document.getElementById('fileInput');
-const filePreview = document.getElementById('filePreview');
+const cameraModeBtn = document.getElementById('cameraModeBtn');
+const galleryModeBtn = document.getElementById('galleryModeBtn');
+const cameraControls = document.getElementById('cameraControls');
+const galleryControls = document.getElementById('galleryControls');
 
 /**
  * Initialize camera when page loads
@@ -82,9 +86,69 @@ async function initCamera() {
 }
 
 /**
+ * Switch to camera mode
+ */
+function switchToCameraMode() {
+    currentMode = 'camera';
+    
+    // Update button states
+    cameraModeBtn.classList.add('active');
+    galleryModeBtn.classList.remove('active');
+    
+    // Show camera controls, hide gallery controls
+    cameraControls.style.display = 'flex';
+    galleryControls.style.display = 'none';
+    
+    // Show video preview
+    cameraContainer.classList.remove('captured');
+    
+    // Clear any previous capture
+    capturedImage = null;
+    
+    // Hide result
+    resultDiv.classList.remove('show');
+    
+    // Restart camera
+    initCamera();
+    
+    showStatus('Camera mode selected. Position your shot and click capture.', 'info');
+}
+
+/**
+ * Switch to gallery mode
+ */
+function switchToGalleryMode() {
+    currentMode = 'gallery';
+    
+    // Update button states
+    galleryModeBtn.classList.add('active');
+    cameraModeBtn.classList.remove('active');
+    
+    // Show gallery controls, hide camera controls
+    galleryControls.style.display = 'flex';
+    cameraControls.style.display = 'none';
+    
+    // Stop camera stream
+    stopCameraStream();
+    
+    // Hide video preview
+    cameraContainer.classList.remove('captured');
+    
+    // Clear any previous capture
+    capturedImage = null;
+    
+    // Hide result
+    resultDiv.classList.remove('show');
+    
+    showStatus('Gallery mode selected. Click "Choose Image" to select a photo.', 'info');
+}
+
+/**
  * Capture photo from video stream
  */
 function capturePhoto() {
+    if (currentMode !== 'camera') return;
+    
     try {
         // Set canvas dimensions to match video
         canvas.width = video.videoWidth;
@@ -274,20 +338,9 @@ function handleFileSelect(event) {
     const file = event.target.files[0];
     if (file) {
         selectedFile = file;
+        showStatus('Uploading image...', 'info');
         
-        // Show preview
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const preview = document.getElementById('filePreview');
-            if (preview) {
-                preview.innerHTML = '<img src="' + e.target.result + '" alt="Preview">';
-            }
-        };
-        reader.readAsDataURL(file);
-        
-        showStatus('File selected! Uploading...', 'info');
-        
-        // Auto-upload the selected file
+        // Upload the selected file
         uploadFileFromGallery(file);
     }
 }
@@ -313,6 +366,14 @@ async function uploadFileFromGallery(file) {
         
         currentImageUrl = data.image_url;
         currentQrCode = data.qr_code;
+        
+        // Show preview in camera area
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            cameraContainer.classList.add('captured');
+        };
+        reader.readAsDataURL(file);
         
         displayResult(data);
         
