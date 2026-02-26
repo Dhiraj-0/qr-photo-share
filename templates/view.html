@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="View shared photo">
+    <meta name="theme-color" content="#667eea">
+    <title>View Photo - QR Photo Share</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>🖼️ Shared Photo</h1>
+        <p class="subtitle">Photo shared via QR code</p>
+        
+        <div class="view-container">
+            <!-- Display the shared image -->
+            <img src="{{ image_url }}" alt="Shared photo">
+            
+            <!-- QR Code Section -->
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #eee;">
+                <h3 style="margin-bottom: 15px;">Scan to View on Other Device</h3>
+                <div class="qr-container">
+                    <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code">
+                </div>
+            </div>
+            
+            <!-- Action Links -->
+            <div class="action-links" style="margin-top: 25px;">
+                <a href="{{ image_url }}" download="{{ filename }}">💾 Download</a>
+                <a href="/">📸 Share Your Photo</a>
+            </div>
+            
+            <!-- Privacy Notice -->
+            <div class="privacy-notice">
+                🔒 This image can only be accessed via this unique link. 
+                It is not publicly searchable or browsable.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

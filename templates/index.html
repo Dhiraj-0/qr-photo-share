@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Capture photos and generate QR codes for easy sharing">
+    <meta name="theme-color" content="#667eea">
+    <title>QR Photo Share - Capture & Share</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>📸 QR Photo Share</h1>
+        <p class="subtitle">Capture a photo and instantly share via QR code</p>
+        
+        <!-- Camera Section -->
+        <div class="camera-container" id="cameraContainer">
+            <!-- Video stream from camera -->
+            <video id="video" autoplay playsinline></video>
+            
+            <!-- Canvas for capturing -->
+            <canvas id="canvas"></canvas>
+            
+            <!-- Preview of captured image -->
+            <img id="preview" alt="Captured preview">
+        </div>
+        
+        <!-- Status Message -->
+        <div id="status" class="status" style="display: none;"></div>
+        
+        <!-- Camera Controls -->
+        <div class="camera-controls">
+            <button id="captureBtn" class="btn btn-primary" disabled>
+                📷 Capture
+            </button>
+            <button id="retakeBtn" class="btn btn-secondary" style="display: none;">
+                🔄 Retake
+            </button>
+            <button id="uploadBtn" class="btn btn-primary" style="display: none;">
+                ⬆️ Upload
+            </button>
+        </div>
+        
+        <!-- Result Section with QR Code -->
+        <div id="result" class="result">
+            <h2>🎉 Your Photo is Ready!</h2>
+            
+            <div class="qr-container">
+                <img id="qrCodeImg" src="" alt="QR Code">
+            </div>
+            
+            <div class="url-container">
+                <p style="margin-bottom: 5px; font-size: 0.85rem; color: #666;">Share this link:</p>
+                <a id="imageUrl" href="#" target="_blank"></a>
+            </div>
+            
+            <div class="action-links">
+                <a href="#" onclick="shareContent(); return false;">📤 Share</a>
+                <a href="#" onclick="downloadQrCode(); return false;">⬇️ Download QR</a>
+                <a href="#" onclick="copyUrl(); return false;">📋 Copy Link</a>
+                <a id="viewLink" href="#" target="_blank">👁️ View Full Size</a>
+            </div>
+            
+            <button class="btn btn-secondary" onclick="location.reload()" style="margin-top: 20px;">
+                ➕ Capture Another
+            </button>
+        </div>
+        
+        <!-- Privacy Notice -->
+        <div class="privacy-notice">
+            🔒 <strong>Privacy Protected:</strong> Images are stored with unique random URLs 
+            and cannot be found through search or directory browsing.
+        </div>
+    </div>
+    
+    <!-- JavaScript for camera functionality -->
+    <script src="{{ url_for('static', filename='js/camera.js') }}"></script>
+</body>
+</html>
