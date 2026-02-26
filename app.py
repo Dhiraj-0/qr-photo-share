@@ -108,9 +108,53 @@ def upload_image():
         with open(filepath, 'wb') as f:
             f.write(image_bytes)
         
-        # Generate unique URL for the image
-        # In production, this would be the actual domain
-        base_url = request.host_url.rstrip('/')
+        # Generate unique URL for the image - use explicit domain for production
+        base_url = os.environ.get('APP_URL', request.host_url.rstrip('/'))
+        unique_url = f"{base_url}/img/{filename}"
+        
+        # Generate QR code
+        qr_code_b64 = generate_qr_code(unique_url)
+        
+        return jsonify({
+            'success': True,
+            'image_url': unique_url,
+            'qr_code': qr_code_b64,
+            'filename': filename
+        })
+        
+    except Exception as e:
+        return jsonify({'error': f'Server error: {str(e)}'}), 500
+
+
+@app.route('/upload-file', methods=['POST'])
+def upload_file():
+    """
+    Handle file upload from device gallery.
+    Accepts image files uploaded directly.
+    """
+    try:
+        # Check if file is in request
+        if 'file' not in request.files:
+            return jsonify({'error': 'No file provided'}), 400
+        
+        file = request.files['file']
+        
+        if file.filename == '':
+            return jsonify({'error': 'No file selected'}), 400
+        
+        if not allowed_file(file.filename):
+            return jsonify({'error': 'Invalid file type. Allowed: png, jpg, jpeg, gif'}), 400
+        
+        # Generate unique filename for privacy
+        ext = file.filename.rsplit('.', 1)[1].lower()
+        filename = f"{uuid.uuid4()}.{ext}"
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        
+        # Save the image
+        file.save(filepath)
+        
+        # Generate unique URL - use explicit domain for production
+        base_url = os.environ.get('APP_URL', request.host_url.rstrip('/'))
         unique_url = f"{base_url}/img/{filename}"
         
         # Generate QR code
@@ -169,8 +213,8 @@ def show_qr(filename):
     except ValueError:
         return jsonify({'error': 'Invalid image identifier'}), 404
     
-    # Generate the image URL
-    base_url = request.host_url.rstrip('/')
+    # Generate the image URL - use explicit domain for production
+    base_url = os.environ.get('APP_URL', request.host_url.rstrip('/'))
     image_url = f"{base_url}/img/{filename}"
     
     # Generate QR code

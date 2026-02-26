@@ -79,12 +79,103 @@ body {
     display: block;
 }
 
+/* Mode Selection */
+.mode-selection {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.btn-mode {
+    padding: 12px 20px;
+    font-size: 0.85rem;
+    background: #f0f0f0;
+    color: #666;
+    border: 2px solid transparent;
+}
+
+.btn-mode.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: transparent;
+}
+
+/* Mode Content */
+.mode-content {
+    margin-top: 15px;
+}
+
+/* Upload Container */
+.upload-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.upload-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    border: 3px dashed #667eea;
+    border-radius: 15px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+.upload-label:hover {
+    background: #e8eaff;
+    border-color: #764ba2;
+}
+
+.upload-icon {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+.upload-label span {
+    color: #667eea;
+    font-weight: 600;
+}
+
+.file-preview {
+    margin-top: 15px;
+}
+
+.file-preview img {
+    max-width: 200px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
 /* Camera Controls */
 .camera-controls {
     display: flex;
     justify-content: center;
     gap: 15px;
-    margin-top: 20px;
+    margin-top: 10px;
+}
+
+/* Capture Button - Fixed position for mobile */
+.capture-btn {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    padding: 18px 40px;
+    font-size: 1.1rem;
+    box-shadow: 0 8px 30px rgba(102, 126, 234, 0.5);
+}
+
+@media (min-width: 768px) {
+    .capture-btn {
+        position: static;
+        transform: none;
+    }
 }
 
 /* Buttons */

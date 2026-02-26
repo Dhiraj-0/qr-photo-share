@@ -6,6 +6,7 @@
 // Global variables
 let stream = null;
 let capturedImage = null;
+let selectedFile = null;
 let currentImageUrl = null;
 let currentQrCode = null;
 
@@ -21,6 +22,15 @@ const statusDiv = document.getElementById('status');
 const resultDiv = document.getElementById('result');
 const qrCodeImg = document.getElementById('qrCodeImg');
 const imageUrlLink = document.getElementById('imageUrl');
+
+// Mode switching elements
+const cameraModeBtn = document.getElementById('cameraModeBtn');
+const uploadModeBtn = document.getElementById('uploadModeBtn');
+const cameraMode = document.getElementById('cameraMode');
+const uploadMode = document.getElementById('uploadMode');
+const fileInput = document.getElementById('fileInput');
+const uploadFileBtn = document.getElementById('uploadFileBtn');
+const filePreview = document.getElementById('filePreview');
 
 /**
  * Initialize camera when page loads
@@ -302,3 +312,107 @@ if (uploadBtn) {
 window.addEventListener('beforeunload', () => {
     stopCameraStream();
 });
+
+/**
+ * Mode Switching Functions
+ */
+function switchToCameraMode() {
+    cameraModeBtn.classList.add('active');
+    uploadModeBtn.classList.remove('active');
+    cameraMode.style.display = 'block';
+    uploadMode.style.display = 'none';
+    
+    // Stop any file upload
+    selectedFile = null;
+    filePreview.innerHTML = '';
+    uploadFileBtn.disabled = true;
+    
+    // Restart camera
+    initCamera();
+}
+
+function switchToUploadMode() {
+    uploadModeBtn.classList.add('active');
+    cameraModeBtn.classList.remove('active');
+    uploadMode.style.display = 'block';
+    cameraMode.style.display = 'none';
+    
+    // Stop camera
+    stopCameraStream();
+    
+    // Hide camera preview
+    cameraContainer.classList.remove('captured');
+    showStatus('Select an image from your gallery to upload.', 'info');
+}
+
+// File selection handler
+function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (file) {
+        selectedFile = file;
+        
+        // Show preview
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            filePreview.innerHTML = '<img src="' + e.target.result + '" alt="Preview">';
+        };
+        reader.readAsDataURL(file);
+        
+        uploadFileBtn.disabled = false;
+        showStatus('File selected! Click "Upload Image" to generate QR code.', 'success');
+    }
+}
+
+// Upload file handler
+async function uploadFile() {
+    if (!selectedFile) {
+        showStatus('No file selected. Please select a file first.', 'error');
+        return;
+    }
+    
+    uploadFileBtn.disabled = true;
+    uploadFileBtn.textContent = 'Uploading...';
+    showStatus('Uploading file...', 'info');
+    
+    try {
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+        
+        const response = await fetch('/upload-file', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error || 'Upload failed');
+        }
+        
+        currentImageUrl = data.image_url;
+        currentQrCode = data.qr_code;
+        
+        displayResult(data);
+        
+    } catch (err) {
+        console.error('Upload error:', err);
+        showStatus('Error uploading file: ' + err.message, 'error');
+    } finally {
+        uploadFileBtn.disabled = false;
+        uploadFileBtn.textContent = 'Upload Image';
+    }
+}
+
+// Add event listeners for mode switching
+if (cameraModeBtn) {
+    cameraModeBtn.addEventListener('click', switchToCameraMode);
+}
+if (uploadModeBtn) {
+    uploadModeBtn.addEventListener('click', switchToUploadMode);
+}
+if (fileInput) {
+    fileInput.addEventListener('change', handleFileSelect);
+}
+if (uploadFileBtn) {
+    uploadFileBtn.addEventListener('click', uploadFile);
+}

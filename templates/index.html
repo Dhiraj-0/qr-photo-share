@@ -28,17 +28,40 @@
         <!-- Status Message -->
         <div id="status" class="status" style="display: none;"></div>
         
-        <!-- Camera Controls -->
-        <div class="camera-controls">
-            <button id="captureBtn" class="btn btn-primary" disabled>
-                📷 Capture
-            </button>
-            <button id="retakeBtn" class="btn btn-secondary" style="display: none;">
-                🔄 Retake
-            </button>
-            <button id="uploadBtn" class="btn btn-primary" style="display: none;">
-                ⬆️ Upload
-            </button>
+        <!-- Mode Selection -->
+        <div class="mode-selection">
+            <button id="cameraModeBtn" class="btn btn-mode active">📷 Camera</button>
+            <button id="uploadModeBtn" class="btn btn-mode">📁 Upload from Device</button>
+        </div>
+
+        <!-- Camera Mode -->
+        <div id="cameraMode" class="mode-content">
+            <div class="camera-controls">
+                <button id="captureBtn" class="btn btn-primary capture-btn" disabled>
+                    📷 Capture Photo
+                </button>
+                <button id="retakeBtn" class="btn btn-secondary" style="display: none;">
+                    🔄 Retake
+                </button>
+                <button id="uploadBtn" class="btn btn-primary" style="display: none;">
+                    ⬆️ Upload
+                </button>
+            </div>
+        </div>
+
+        <!-- Upload Mode -->
+        <div id="uploadMode" class="mode-content" style="display: none;">
+            <div class="upload-container">
+                <label for="fileInput" class="upload-label">
+                    <div class="upload-icon">📁</div>
+                    <span>Tap to select image from gallery</span>
+                </label>
+                <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                <button id="uploadFileBtn" class="btn btn-primary" disabled>
+                    ⬆️ Upload Image
+                </button>
+                <div id="filePreview" class="file-preview"></div>
+            </div>
         </div>
         
         <!-- Result Section with QR Code -->
