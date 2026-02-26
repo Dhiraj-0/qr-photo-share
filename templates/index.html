@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="Capture photos and generate QR codes for easy sharing">
     <meta name="theme-color" content="#667eea">
     <title>QR Photo Share - Capture & Share</title>
@@ -13,56 +13,22 @@
         <h1>📸 QR Photo Share</h1>
         <p class="subtitle">Capture a photo and instantly share via QR code</p>
         
-        <!-- Camera Section -->
-        <div class="camera-container" id="cameraContainer">
-            <!-- Video stream from camera -->
-            <video id="video" autoplay playsinline></video>
-            
-            <!-- Canvas for capturing -->
-            <canvas id="canvas"></canvas>
-            
-            <!-- Preview of captured image -->
-            <img id="preview" alt="Captured preview">
+        <!-- Camera Section - This section zooms on mobile -->
+        <div class="camera-wrapper" id="cameraWrapper">
+            <div class="camera-container" id="cameraContainer">
+                <!-- Video stream from camera -->
+                <video id="video" autoplay playsinline></video>
+                
+                <!-- Canvas for capturing -->
+                <canvas id="canvas"></canvas>
+                
+                <!-- Preview of captured image -->
+                <img id="preview" alt="Captured preview">
+            </div>
         </div>
         
         <!-- Status Message -->
         <div id="status" class="status" style="display: none;"></div>
-        
-        <!-- Mode Selection -->
-        <div class="mode-selection">
-            <button id="cameraModeBtn" class="btn btn-mode active">📷 Camera</button>
-            <button id="uploadModeBtn" class="btn btn-mode">📁 Upload from Device</button>
-        </div>
-
-        <!-- Camera Mode -->
-        <div id="cameraMode" class="mode-content">
-            <div class="camera-controls">
-                <button id="captureBtn" class="btn btn-primary capture-btn" disabled>
-                    📷 Capture Photo
-                </button>
-                <button id="retakeBtn" class="btn btn-secondary" style="display: none;">
-                    🔄 Retake
-                </button>
-                <button id="uploadBtn" class="btn btn-primary" style="display: none;">
-                    ⬆️ Upload
-                </button>
-            </div>
-        </div>
-
-        <!-- Upload Mode -->
-        <div id="uploadMode" class="mode-content" style="display: none;">
-            <div class="upload-container">
-                <label for="fileInput" class="upload-label">
-                    <div class="upload-icon">📁</div>
-                    <span>Tap to select image from gallery</span>
-                </label>
-                <input type="file" id="fileInput" accept="image/*" style="display: none;">
-                <button id="uploadFileBtn" class="btn btn-primary" disabled>
-                    ⬆️ Upload Image
-                </button>
-                <div id="filePreview" class="file-preview"></div>
-            </div>
-        </div>
         
         <!-- Result Section with QR Code -->
         <div id="result" class="result">
@@ -78,8 +44,6 @@
             </div>
             
             <div class="action-links">
-                <a href="#" onclick="shareContent(); return false;">📤 Share</a>
-                <a href="#" onclick="downloadQrCode(); return false;">⬇️ Download QR</a>
                 <a href="#" onclick="copyUrl(); return false;">📋 Copy Link</a>
                 <a id="viewLink" href="#" target="_blank">👁️ View Full Size</a>
             </div>
@@ -94,6 +58,41 @@
             🔒 <strong>Privacy Protected:</strong> Images are stored with unique random URLs 
             and cannot be found through search or directory browsing.
         </div>
+        
+        <!-- Contact Section -->
+        <div class="contact-section">
+            <h3>📬 Contact</h3>
+            <p>For any queries or collaborations, feel free to reach out:</p>
+            <div class="contact-links">
+                <a href="https://linkedin.com/in/dhiraj-0" target="_blank" class="contact-link linkedin">
+                    💼 LinkedIn
+                </a>
+                <a href="https://github.com/Dhiraj-0" target="_blank" class="contact-link github">
+                    💻 GitHub
+                </a>
+                <a href="mailto:dhiraj@example.com" class="contact-link email">
+                    📧 Email
+                </a>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>© 2024 QR Photo Share. All rights reserved.</p>
+        </div>
+    </div>
+    
+    <!-- Capture Button - Fixed outside the camera container -->
+    <div class="capture-button-container" id="captureButtonContainer">
+        <button id="captureBtn" class="capture-btn" disabled>
+            📷 Capture
+        </button>
+        <button id="retakeBtn" class="capture-btn retake-btn" style="display: none;">
+            🔄 Retake
+        </button>
+        <button id="uploadBtn" class="capture-btn upload-btn" style="display: none;">
+            ⬆️ Upload
+        </button>
     </div>
     
     <!-- JavaScript for camera functionality -->

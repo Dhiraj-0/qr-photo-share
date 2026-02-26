@@ -14,7 +14,8 @@ let currentQrCode = null;
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
 const preview = document.getElementById('preview');
-const cameraContainer = document.querySelector('.camera-container');
+const cameraContainer = document.getElementById('cameraContainer');
+const cameraWrapper = document.getElementById('cameraWrapper');
 const captureBtn = document.getElementById('captureBtn');
 const retakeBtn = document.getElementById('retakeBtn');
 const uploadBtn = document.getElementById('uploadBtn');
@@ -107,7 +108,7 @@ function capturePhoto() {
         preview.src = capturedImage;
         cameraContainer.classList.add('captured');
         
-        // Update buttons
+        // Update buttons - hide capture, show retake and upload
         captureBtn.style.display = 'none';
         retakeBtn.style.display = 'inline-block';
         uploadBtn.style.display = 'inline-block';
@@ -133,7 +134,7 @@ function retakePhoto() {
     // Show video again
     cameraContainer.classList.remove('captured');
     
-    // Reset buttons
+    // Reset buttons - show capture, hide retake and upload
     captureBtn.style.display = 'inline-block';
     retakeBtn.style.display = 'none';
     uploadBtn.style.display = 'none';
@@ -191,7 +192,7 @@ async function uploadImage() {
         showStatus('Error uploading image: ' + err.message, 'error');
     } finally {
         uploadBtn.disabled = false;
-        uploadBtn.textContent = 'Upload';
+        uploadBtn.textContent = '⬆️ Upload';
     }
 }
 
@@ -219,6 +220,11 @@ function displayResult(data) {
     
     // Scroll to result
     resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    
+    // Hide capture buttons after successful upload
+    captureBtn.style.display = 'none';
+    retakeBtn.style.display = 'none';
+    uploadBtn.style.display = 'none';
 }
 
 /**
@@ -297,7 +303,7 @@ function downloadQrCode() {
     showStatus('QR code downloaded!', 'success');
 }
 
-// Event listeners
+// Event listeners - make sure elements exist before adding listeners
 if (captureBtn) {
     captureBtn.addEventListener('click', capturePhoto);
 }
@@ -314,34 +320,34 @@ window.addEventListener('beforeunload', () => {
 });
 
 /**
- * Mode Switching Functions
+ * Mode Switching Functions (for future upload mode)
  */
 function switchToCameraMode() {
-    cameraModeBtn.classList.add('active');
-    uploadModeBtn.classList.remove('active');
-    cameraMode.style.display = 'block';
-    uploadMode.style.display = 'none';
+    if (cameraModeBtn) cameraModeBtn.classList.add('active');
+    if (uploadModeBtn) uploadModeBtn.classList.remove('active');
+    if (cameraMode) cameraMode.style.display = 'block';
+    if (uploadMode) uploadMode.style.display = 'none';
     
     // Stop any file upload
     selectedFile = null;
-    filePreview.innerHTML = '';
-    uploadFileBtn.disabled = true;
+    if (filePreview) filePreview.innerHTML = '';
+    if (uploadFileBtn) uploadFileBtn.disabled = true;
     
     // Restart camera
     initCamera();
 }
 
 function switchToUploadMode() {
-    uploadModeBtn.classList.add('active');
-    cameraModeBtn.classList.remove('active');
-    uploadMode.style.display = 'block';
-    cameraMode.style.display = 'none';
+    if (uploadModeBtn) uploadModeBtn.classList.add('active');
+    if (cameraModeBtn) cameraModeBtn.classList.remove('active');
+    if (uploadMode) uploadMode.style.display = 'block';
+    if (cameraMode) cameraMode.style.display = 'none';
     
     // Stop camera
     stopCameraStream();
     
     // Hide camera preview
-    cameraContainer.classList.remove('captured');
+    if (cameraContainer) cameraContainer.classList.remove('captured');
     showStatus('Select an image from your gallery to upload.', 'info');
 }
 
@@ -354,11 +360,13 @@ function handleFileSelect(event) {
         // Show preview
         const reader = new FileReader();
         reader.onload = function(e) {
-            filePreview.innerHTML = '<img src="' + e.target.result + '" alt="Preview">';
+            if (filePreview) {
+                filePreview.innerHTML = '<img src="' + e.target.result + '" alt="Preview">';
+            }
         };
         reader.readAsDataURL(file);
         
-        uploadFileBtn.disabled = false;
+        if (uploadFileBtn) uploadFileBtn.disabled = false;
         showStatus('File selected! Click "Upload Image" to generate QR code.', 'success');
     }
 }
@@ -370,8 +378,10 @@ async function uploadFile() {
         return;
     }
     
-    uploadFileBtn.disabled = true;
-    uploadFileBtn.textContent = 'Uploading...';
+    if (uploadFileBtn) {
+        uploadFileBtn.disabled = true;
+        uploadFileBtn.textContent = 'Uploading...';
+    }
     showStatus('Uploading file...', 'info');
     
     try {
@@ -398,8 +408,10 @@ async function uploadFile() {
         console.error('Upload error:', err);
         showStatus('Error uploading file: ' + err.message, 'error');
     } finally {
-        uploadFileBtn.disabled = false;
-        uploadFileBtn.textContent = 'Upload Image';
+        if (uploadFileBtn) {
+            uploadFileBtn.disabled = false;
+            uploadFileBtn.textContent = 'Upload Image';
+        }
     }
 }
 

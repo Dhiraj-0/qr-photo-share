@@ -18,6 +18,7 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 20px;
+    padding-bottom: 120px; /* Space for fixed capture button */
 }
 
 /* Container Styles */
@@ -44,12 +45,21 @@ body {
     font-size: 0.95rem;
 }
 
+/* Camera Wrapper - This is what gets zoomed on mobile */
+.camera-wrapper {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto 20px;
+    border-radius: 15px;
+    overflow: hidden;
+    background: #000;
+    /* Mobile zoom transformation - only applies on mobile */
+}
+
 /* Camera Container */
 .camera-container {
     position: relative;
     width: 100%;
-    max-width: 400px;
-    margin: 0 auto 20px;
     border-radius: 15px;
     overflow: hidden;
     background: #000;
@@ -77,150 +87,6 @@ body {
 
 .camera-container.captured #preview {
     display: block;
-}
-
-/* Mode Selection */
-.mode-selection {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.btn-mode {
-    padding: 12px 20px;
-    font-size: 0.85rem;
-    background: #f0f0f0;
-    color: #666;
-    border: 2px solid transparent;
-}
-
-.btn-mode.active {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border-color: transparent;
-}
-
-/* Mode Content */
-.mode-content {
-    margin-top: 15px;
-}
-
-/* Upload Container */
-.upload-container {
-    text-align: center;
-    padding: 20px;
-}
-
-.upload-label {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 30px;
-    border: 3px dashed #667eea;
-    border-radius: 15px;
-    cursor: pointer;
-    margin-bottom: 20px;
-    transition: all 0.3s ease;
-    background: #f8f9fa;
-}
-
-.upload-label:hover {
-    background: #e8eaff;
-    border-color: #764ba2;
-}
-
-.upload-icon {
-    font-size: 3rem;
-    margin-bottom: 10px;
-}
-
-.upload-label span {
-    color: #667eea;
-    font-weight: 600;
-}
-
-.file-preview {
-    margin-top: 15px;
-}
-
-.file-preview img {
-    max-width: 200px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-
-/* Camera Controls */
-.camera-controls {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 10px;
-}
-
-/* Capture Button - Fixed position for mobile */
-.capture-btn {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 100;
-    padding: 18px 40px;
-    font-size: 1.1rem;
-    box-shadow: 0 8px 30px rgba(102, 126, 234, 0.5);
-}
-
-@media (min-width: 768px) {
-    .capture-btn {
-        position: static;
-        transform: none;
-    }
-}
-
-/* Buttons */
-.btn {
-    padding: 15px 30px;
-    border: none;
-    border-radius: 50px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
-}
-
-.btn-primary:active {
-    transform: translateY(0);
-}
-
-.btn-secondary {
-    background: #6c757d;
-    color: white;
-    box-shadow: 0 5px 20px rgba(108, 117, 125, 0.4);
-}
-
-.btn-secondary:hover {
-    background: #5a6268;
-    transform: translateY(-2px);
-}
-
-.btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
 }
 
 /* Status Message */
@@ -326,6 +192,326 @@ body {
     color: white;
 }
 
+/* Privacy Notice */
+.privacy-notice {
+    text-align: center;
+    margin-top: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+/* Contact Section */
+.contact-section {
+    margin-top: 30px;
+    padding: 25px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+}
+
+.contact-section h3 {
+    margin-bottom: 10px;
+    font-size: 1.3rem;
+}
+
+.contact-section p {
+    margin-bottom: 20px;
+    opacity: 0.9;
+    font-size: 0.95rem;
+}
+
+.contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: white;
+    color: #667eea;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.contact-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+.contact-link.linkedin {
+    background: #0077b5;
+    color: white;
+}
+
+.contact-link.github {
+    background: #333;
+    color: white;
+}
+
+.contact-link.email {
+    background: #ea4335;
+    color: white;
+}
+
+/* Footer */
+.footer {
+    margin-top: 25px;
+    text-align: center;
+    color: #999;
+    font-size: 0.85rem;
+}
+
+.footer p {
+    margin: 0;
+}
+
+/* ============================================
+   MOBILE-SPECIFIC STYLES (max-width: 768px)
+   ============================================ */
+@media (max-width: 768px) {
+    /* Prevent viewport zooming */
+    html {
+        touch-action: manipulation;
+        -webkit-text-size-adjust: 100%;
+    }
+    
+    body {
+        padding: 15px;
+        padding-bottom: 100px;
+    }
+    
+    .container {
+        padding: 20px;
+        border-radius: 15px;
+    }
+    
+    .container h1 {
+        font-size: 1.5rem;
+        margin-bottom: 8px;
+    }
+    
+    .container .subtitle {
+        font-size: 0.85rem;
+        margin-bottom: 15px;
+    }
+    
+    /* Camera wrapper zoom effect - ONLY this section zooms */
+    .camera-wrapper {
+        transform: scale(0.85);
+        transform-origin: top center;
+        margin-bottom: 5px;
+    }
+    
+    /* Result section - scale down on mobile */
+    .result {
+        transform: scale(0.9);
+        transform-origin: top center;
+    }
+    
+    .result h2 {
+        font-size: 1.2rem;
+    }
+    
+    .qr-container img {
+        max-width: 200px;
+    }
+    
+    .action-links {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .action-links a {
+        width: 100%;
+        max-width: 200px;
+        text-align: center;
+    }
+    
+    /* Contact section mobile */
+    .contact-section {
+        padding: 20px 15px;
+    }
+    
+    .contact-section h3 {
+        font-size: 1.1rem;
+    }
+    
+    .contact-links {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .contact-link {
+        width: 100%;
+        max-width: 180px;
+        justify-content: center;
+    }
+    
+    /* Privacy notice mobile */
+    .privacy-notice {
+        font-size: 0.75rem;
+        padding: 12px;
+    }
+}
+
+/* ============================================
+   EXTRA SMALL MOBILE (max-width: 480px)
+   ============================================ */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+        padding-bottom: 90px;
+    }
+    
+    .container {
+        padding: 15px;
+    }
+    
+    /* More zoom on very small screens */
+    .camera-wrapper {
+        transform: scale(0.75);
+    }
+    
+    .result {
+        transform: scale(0.85);
+    }
+}
+
+/* ============================================
+   LAPTOP/DESKTOP (min-width: 769px) - UNCHANGED
+   ============================================ */
+@media (min-width: 769px) {
+    body {
+        padding: 40px 20px;
+    }
+    
+    .container {
+        padding: 40px;
+    }
+    
+    .container h1 {
+        font-size: 2rem;
+    }
+    
+    .camera-wrapper {
+        max-width: 500px;
+    }
+    
+    /* NO ZOOM on desktop - layout completely unchanged */
+    .camera-wrapper,
+    .result {
+        transform: none;
+    }
+}
+
+/* ============================================
+   CAPTURE BUTTON - Fixed at bottom center
+   ============================================ */
+.capture-button-container {
+    position: fixed;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: flex;
+    gap: 15px;
+    padding: 10px;
+}
+
+.capture-btn {
+    padding: 18px 40px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 8px 30px rgba(102, 126, 234, 0.5);
+    white-space: nowrap;
+}
+
+.capture-btn:hover:not(:disabled) {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6);
+}
+
+.capture-btn:active:not(:disabled) {
+    transform: translateY(0) scale(1);
+}
+
+.capture-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.retake-btn {
+    background: #6c757d;
+    box-shadow: 0 8px 30px rgba(108, 117, 125, 0.5);
+}
+
+.retake-btn:hover:not(:disabled) {
+    box-shadow: 0 12px 35px rgba(108, 117, 125, 0.6);
+}
+
+.upload-btn {
+    background: #28a745;
+    box-shadow: 0 8px 30px rgba(40, 167, 69, 0.5);
+}
+
+.upload-btn:hover:not(:disabled) {
+    box-shadow: 0 12px 35px rgba(40, 167, 69, 0.6);
+}
+
+/* Mobile capture button adjustments */
+@media (max-width: 768px) {
+    .capture-button-container {
+        bottom: 20px;
+        gap: 10px;
+        padding: 8px;
+    }
+    
+    .capture-btn {
+        padding: 15px 30px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .capture-button-container {
+        bottom: 15px;
+        gap: 8px;
+        padding: 5px;
+    }
+    
+    .capture-btn {
+        padding: 14px 25px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Ensure button is always visible and never hidden */
+.capture-button-container {
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
 /* View Image Page */
 .view-container {
     text-align: center;
@@ -347,17 +533,6 @@ body {
     font-weight: 600;
 }
 
-/* Privacy Notice */
-.privacy-notice {
-    text-align: center;
-    margin-top: 20px;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 10px;
-    font-size: 0.85rem;
-    color: #666;
-}
-
 /* Loading Spinner */
 .spinner {
     display: inline-block;
@@ -373,51 +548,4 @@ body {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
-}
-
-/* Mobile Optimizations */
-@media (max-width: 480px) {
-    body {
-        padding: 10px;
-    }
-    
-    .container {
-        padding: 20px;
-        border-radius: 15px;
-    }
-    
-    .container h1 {
-        font-size: 1.5rem;
-    }
-    
-    .btn {
-        padding: 12px 24px;
-        font-size: 0.9rem;
-    }
-    
-    .camera-container {
-        max-width: 100%;
-    }
-    
-    .action-links {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .action-links a {
-        width: 100%;
-        max-width: 250px;
-        text-align: center;
-    }
-}
-
-/* Desktop Enhancements */
-@media (min-width: 768px) {
-    .container {
-        padding: 40px;
-    }
-    
-    .camera-container {
-        max-width: 500px;
-    }
 }
