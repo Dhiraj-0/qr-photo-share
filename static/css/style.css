@@ -512,6 +512,37 @@ body {
     pointer-events: auto !important;
 }
 
+/* Upload from Gallery Section */
+.upload-section {
+    text-align: center;
+    margin: 15px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.upload-label {
+    margin-bottom: 10px;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.upload-section .btn {
+    font-size: 0.9rem;
+    padding: 12px 25px;
+}
+
+.file-preview {
+    margin-top: 15px;
+}
+
+.file-preview img {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
 /* View Image Page */
 .view-container {
     text-align: center;

@@ -23,14 +23,7 @@ const statusDiv = document.getElementById('status');
 const resultDiv = document.getElementById('result');
 const qrCodeImg = document.getElementById('qrCodeImg');
 const imageUrlLink = document.getElementById('imageUrl');
-
-// Mode switching elements
-const cameraModeBtn = document.getElementById('cameraModeBtn');
-const uploadModeBtn = document.getElementById('uploadModeBtn');
-const cameraMode = document.getElementById('cameraMode');
-const uploadMode = document.getElementById('uploadMode');
 const fileInput = document.getElementById('fileInput');
-const uploadFileBtn = document.getElementById('uploadFileBtn');
 const filePreview = document.getElementById('filePreview');
 
 /**
@@ -259,35 +252,6 @@ function copyUrl() {
 }
 
 /**
- * Share using Web Share API (mobile-friendly)
- */
-async function shareContent() {
-    if (!currentImageUrl) {
-        showStatus('No image to share. Please upload first.', 'error');
-        return;
-    }
-    
-    // Check if Web Share API is available
-    if (navigator.share) {
-        try {
-            await navigator.share({
-                title: 'Check out this photo!',
-                text: 'View this photo I just captured:',
-                url: currentImageUrl
-            });
-            showStatus('Shared successfully!', 'success');
-        } catch (err) {
-            if (err.name !== 'AbortError') {
-                console.error('Share error:', err);
-                showStatus('Share failed. Try copying the link instead.', 'error');
-            }
-        }
-    } else {
-        showStatus('Sharing not supported. Copy the link instead!', 'error');
-    }
-}
-
-/**
  * Download QR code as image
  */
 function downloadQrCode() {
@@ -303,55 +267,9 @@ function downloadQrCode() {
     showStatus('QR code downloaded!', 'success');
 }
 
-// Event listeners - make sure elements exist before adding listeners
-if (captureBtn) {
-    captureBtn.addEventListener('click', capturePhoto);
-}
-if (retakeBtn) {
-    retakeBtn.addEventListener('click', retakePhoto);
-}
-if (uploadBtn) {
-    uploadBtn.addEventListener('click', uploadImage);
-}
-
-// Clean up on page unload
-window.addEventListener('beforeunload', () => {
-    stopCameraStream();
-});
-
 /**
- * Mode Switching Functions (for future upload mode)
+ * Handle file selection from gallery
  */
-function switchToCameraMode() {
-    if (cameraModeBtn) cameraModeBtn.classList.add('active');
-    if (uploadModeBtn) uploadModeBtn.classList.remove('active');
-    if (cameraMode) cameraMode.style.display = 'block';
-    if (uploadMode) uploadMode.style.display = 'none';
-    
-    // Stop any file upload
-    selectedFile = null;
-    if (filePreview) filePreview.innerHTML = '';
-    if (uploadFileBtn) uploadFileBtn.disabled = true;
-    
-    // Restart camera
-    initCamera();
-}
-
-function switchToUploadMode() {
-    if (uploadModeBtn) uploadModeBtn.classList.add('active');
-    if (cameraModeBtn) cameraModeBtn.classList.remove('active');
-    if (uploadMode) uploadMode.style.display = 'block';
-    if (cameraMode) cameraMode.style.display = 'none';
-    
-    // Stop camera
-    stopCameraStream();
-    
-    // Hide camera preview
-    if (cameraContainer) cameraContainer.classList.remove('captured');
-    showStatus('Select an image from your gallery to upload.', 'info');
-}
-
-// File selection handler
 function handleFileSelect(event) {
     const file = event.target.files[0];
     if (file) {
@@ -360,33 +278,27 @@ function handleFileSelect(event) {
         // Show preview
         const reader = new FileReader();
         reader.onload = function(e) {
-            if (filePreview) {
-                filePreview.innerHTML = '<img src="' + e.target.result + '" alt="Preview">';
+            const preview = document.getElementById('filePreview');
+            if (preview) {
+                preview.innerHTML = '<img src="' + e.target.result + '" alt="Preview">';
             }
         };
         reader.readAsDataURL(file);
         
-        if (uploadFileBtn) uploadFileBtn.disabled = false;
-        showStatus('File selected! Click "Upload Image" to generate QR code.', 'success');
+        showStatus('File selected! Uploading...', 'info');
+        
+        // Auto-upload the selected file
+        uploadFileFromGallery(file);
     }
 }
 
-// Upload file handler
-async function uploadFile() {
-    if (!selectedFile) {
-        showStatus('No file selected. Please select a file first.', 'error');
-        return;
-    }
-    
-    if (uploadFileBtn) {
-        uploadFileBtn.disabled = true;
-        uploadFileBtn.textContent = 'Uploading...';
-    }
-    showStatus('Uploading file...', 'info');
-    
+/**
+ * Upload file from gallery
+ */
+async function uploadFileFromGallery(file) {
     try {
         const formData = new FormData();
-        formData.append('file', selectedFile);
+        formData.append('file', file);
         
         const response = await fetch('/upload-file', {
             method: 'POST',
@@ -407,24 +319,24 @@ async function uploadFile() {
     } catch (err) {
         console.error('Upload error:', err);
         showStatus('Error uploading file: ' + err.message, 'error');
-    } finally {
-        if (uploadFileBtn) {
-            uploadFileBtn.disabled = false;
-            uploadFileBtn.textContent = 'Upload Image';
-        }
     }
 }
 
-// Add event listeners for mode switching
-if (cameraModeBtn) {
-    cameraModeBtn.addEventListener('click', switchToCameraMode);
+// Event listeners
+if (captureBtn) {
+    captureBtn.addEventListener('click', capturePhoto);
 }
-if (uploadModeBtn) {
-    uploadModeBtn.addEventListener('click', switchToUploadMode);
+if (retakeBtn) {
+    retakeBtn.addEventListener('click', retakePhoto);
+}
+if (uploadBtn) {
+    uploadBtn.addEventListener('click', uploadImage);
 }
 if (fileInput) {
     fileInput.addEventListener('change', handleFileSelect);
 }
-if (uploadFileBtn) {
-    uploadFileBtn.addEventListener('click', uploadFile);
-}
+
+// Clean up on page unload
+window.addEventListener('beforeunload', () => {
+    stopCameraStream();
+});

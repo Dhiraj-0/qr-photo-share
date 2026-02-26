@@ -27,6 +27,16 @@
             </div>
         </div>
         
+        <!-- Upload from Gallery Section -->
+        <div class="upload-section">
+            <p class="upload-label">Or upload from gallery:</p>
+            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+            <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">
+                📁 Upload from Gallery
+            </button>
+            <div id="filePreview" class="file-preview"></div>
+        </div>
+        
         <!-- Status Message -->
         <div id="status" class="status" style="display: none;"></div>
         
@@ -46,6 +56,7 @@
             <div class="action-links">
                 <a href="#" onclick="copyUrl(); return false;">📋 Copy Link</a>
                 <a id="viewLink" href="#" target="_blank">👁️ View Full Size</a>
+                <a href="#" onclick="downloadQrCode(); return false;">⬇️ Download QR</a>
             </div>
             
             <button class="btn btn-secondary" onclick="location.reload()" style="margin-top: 20px;">
@@ -63,17 +74,17 @@
         <div class="contact-section">
             <h3>📬 Contact</h3>
             <p>For any queries or collaborations, feel free to reach out:</p>
-                <div class="contact-links">
-                    <a href="https://www.linkedin.com/in/dhiraj-kumar-p" target="_blank" class="contact-link linkedin">
-                        💼 LinkedIn
-                    </a>
-                    <a href="https://github.com/Dhiraj-0" target="_blank" class="contact-link github">
-                        💻 GitHub
-                    </a>
-                    <a href="mailto:dhirajpurvey07@gmail.com" class="contact-link email">
-                        📧 Email
-                    </a>
-                </div>
+            <div class="contact-links">
+                <a href="https://www.linkedin.com/in/dhiraj-kumar-p" target="_blank" class="contact-link linkedin">
+                    💼 LinkedIn
+                </a>
+                <a href="https://github.com/Dhiraj-0" target="_blank" class="contact-link github">
+                    💻 GitHub
+                </a>
+                <a href="mailto:dhirajpurvey07@gmail.com" class="contact-link email">
+                    📧 Email
+                </a>
+            </div>
         </div>
         
         <!-- Footer -->
@@ -82,7 +93,7 @@
         </div>
     </div>
     
-    <!-- Capture Button - Fixed outside the camera container -->
+    <!-- Capture Button - Fixed at bottom center -->
     <div class="capture-button-container" id="captureButtonContainer">
         <button id="captureBtn" class="capture-btn" disabled>
             📷 Capture
