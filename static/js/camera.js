@@ -331,6 +331,44 @@ function downloadQrCode() {
     showStatus('QR code downloaded!', 'success');
 }
 
+async function shareQrCode() {
+    if (!currentQrCode || !currentImageUrl) {
+        showStatus('No QR code to share. Please upload first.', 'error');
+        return;
+    }
+    
+    if (navigator.share) {
+        try {
+            const qrDataUrl = 'data:image/png;base64,' + currentQrCode;
+            const response = await fetch(qrDataUrl);
+            const blob = await response.blob();
+            const file = new File([blob], 'qr-code.png', { type: 'image/png' });
+            
+            await navigator.share({
+                title: 'QR Photo Share',
+                text: 'Scan this QR code to view the photo:',
+                files: [file]
+            });
+            showStatus('QR code shared!', 'success');
+        } catch (err) {
+            if (err.name !== 'AbortError') {
+                try {
+                    await navigator.share({
+                        title: 'QR Photo Share',
+                        text: 'View this photo: ' + currentImageUrl,
+                        url: currentImageUrl
+                    });
+                    showStatus('Link shared!', 'success');
+                } catch (e) {
+                    showStatus('Share failed. Try copying the link instead.', 'error');
+                }
+            }
+        }
+    } else {
+        showStatus('Sharing not supported. Copy the link instead!', 'error');
+    }
+}
+
 /**
  * Handle file selection from gallery
  */
