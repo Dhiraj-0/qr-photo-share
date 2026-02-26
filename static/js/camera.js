@@ -17,6 +17,7 @@ const canvas = document.getElementById('canvas');
 const preview = document.getElementById('preview');
 const cameraContainer = document.getElementById('cameraContainer');
 const cameraWrapper = document.getElementById('cameraWrapper');
+const controlsSection = document.getElementById('controlsSection');
 const captureBtn = document.getElementById('captureBtn');
 const retakeBtn = document.getElementById('retakeBtn');
 const uploadBtn = document.getElementById('uploadBtn');
@@ -331,6 +332,9 @@ function downloadQrCode() {
     showStatus('QR code downloaded!', 'success');
 }
 
+/**
+ * Share QR code using Web Share API
+ */
 async function shareQrCode() {
     if (!currentQrCode || !currentImageUrl) {
         showStatus('No QR code to share. Please upload first.', 'error');

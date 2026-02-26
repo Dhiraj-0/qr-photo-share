@@ -13,7 +13,7 @@
         <h1>📸 QR Photo Share</h1>
         <p class="subtitle">Capture a photo and instantly share via QR code</p>
         
-        <!-- Camera Section - This section zooms on mobile -->
+        <!-- Camera Section -->
         <div class="camera-wrapper" id="cameraWrapper">
             <div class="camera-container" id="cameraContainer">
                 <!-- Video stream from camera -->
@@ -24,6 +24,40 @@
                 
                 <!-- Preview of captured image -->
                 <img id="preview" alt="Captured preview">
+            </div>
+        </div>
+        
+        <!-- Controls Section - Directly below camera -->
+        <div class="controls-section" id="controlsSection">
+            <!-- Mode Selection -->
+            <div class="mode-selector">
+                <button id="cameraModeBtn" class="mode-btn active" onclick="switchToCameraMode()">
+                    📷 Camera
+                </button>
+                <button id="galleryModeBtn" class="mode-btn" onclick="switchToGalleryMode()">
+                    🖼️ Upload from Gallery
+                </button>
+            </div>
+            
+            <!-- Camera Controls (visible in camera mode) -->
+            <div class="controls-container" id="cameraControls">
+                <button id="captureBtn" class="capture-btn" disabled>
+                    📷 Capture
+                </button>
+                <button id="retakeBtn" class="capture-btn retake-btn" style="display: none;">
+                    🔄 Retake
+                </button>
+                <button id="uploadBtn" class="capture-btn upload-btn" style="display: none;">
+                    ⬆️ Upload
+                </button>
+            </div>
+            
+            <!-- Gallery Controls (visible in gallery mode) -->
+            <div class="controls-container" id="galleryControls" style="display: none;">
+                <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                <button class="capture-btn gallery-btn" onclick="document.getElementById('fileInput').click()">
+                    🖼️ Choose Image
+                </button>
             </div>
         </div>
         
@@ -81,40 +115,6 @@
         <!-- Footer -->
         <div class="footer">
             <p>© 2026 Dhiraj QR Photo Share. All rights reserved.</p>
-        </div>
-    </div>
-    
-    <!-- Fixed Bottom Section -->
-    <div class="fixed-bottom">
-        <!-- Mode Selection -->
-        <div class="mode-selector">
-            <button id="cameraModeBtn" class="mode-btn active" onclick="switchToCameraMode()">
-                📷 Camera
-            </button>
-            <button id="galleryModeBtn" class="mode-btn" onclick="switchToGalleryMode()">
-                🖼️ Upload from Gallery
-            </button>
-        </div>
-        
-        <!-- Camera Controls (visible in camera mode) -->
-        <div class="controls-container" id="cameraControls">
-            <button id="captureBtn" class="capture-btn" disabled>
-                📷 Capture
-            </button>
-            <button id="retakeBtn" class="capture-btn retake-btn" style="display: none;">
-                🔄 Retake
-            </button>
-            <button id="uploadBtn" class="capture-btn upload-btn" style="display: none;">
-                ⬆️ Upload
-            </button>
-        </div>
-        
-        <!-- Gallery Controls (visible in gallery mode) -->
-        <div class="controls-container" id="galleryControls" style="display: none;">
-            <input type="file" id="fileInput" accept="image/*" style="display: none;">
-            <button class="capture-btn gallery-btn" onclick="document.getElementById('fileInput').click()">
-                🖼️ Choose Image
-            </button>
         </div>
     </div>
     
