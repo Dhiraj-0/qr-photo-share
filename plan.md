@@ -1,59 +1,42 @@
-# QR Photo Share - Full Stack Application Plan
+# Plan: Front/Back Camera Switching Implementation
 
-## Project Overview
-A Flask-based web application that allows users to capture photos from their mobile browser, generates a unique URL for each image, creates a QR code for sharing, and ensures images are only accessible via their unique links.
+## Information Gathered
 
-## Folder Structure
-```
-QR py/
-├── app.py                 # Main Flask application
-├── requirements.txt      # Python dependencies
-├── static/
-│   ├── uploads/          # Stored images (created at runtime)
-│   ├── css/
-│   │   └── style.css     # Mobile-friendly styles
-│   └── js/
-│       └── camera.js     # Camera capture logic
-├── templates/
-│   ├── index.html        # Main capture page
-│   └── view.html         # Image viewing page
-├── README.md             # Documentation
-└── DEPLOYMENT.md         # Deployment guide
-```
+### Current Implementation Analysis:
+1. **camera.js**: Uses `getUserMedia` API with `facingMode: { ideal: 'environment' }` which only requests the back camera
+2. **index.html**: Contains the video element, capture/retake/upload buttons, and mode selector (camera/gallery)
+3. **style.css**: Contains all styling for the interface
 
-## Technical Implementation
+### Current Flow:
+1. Page loads → `initCamera()` is called → requests back camera only
+2. User clicks "Capture" → image captured to canvas → preview shown
+3. User clicks "Upload" → `uploadImage()` sends to server → QR code generated
+4. Result displayed with QR code
 
-### Backend (app.py)
-- Flask routes:
-  - GET / - Main camera capture page
-  - POST /upload - Handle image upload
-  - GET /img/<unique_id> - Serve image (protected)
-  - GET /qr/<unique_id> - QR code display page
-- UUID4 for unique filenames
-- QR code generation using qrcode library
-- Static folder protection
+## Plan
 
-### Frontend
-- index.html: Camera interface with capture button
-- style.css: Mobile-friendly responsive design
-- camera.js: getUserMedia() API integration
+### Step 1: Update `camera.js`
+- Add `currentFacingMode` variable to track current camera ('environment' or 'user')
+- Add `switchCamera()` function to toggle between front/back cameras
+- Modify `initCamera()` to accept optional `facingMode` parameter
+- Add button element reference for camera switch
+- Add event listener for switch camera button
 
-### Features
-1. Camera access via getUserMedia()
-2. Photo capture from browser
-3. Base64 image upload to Flask
-4. Secure UUID filename storage
-5. Unique URL generation
-6. QR code automatic generation
-7. Image viewing via unique link
-8. Privacy: No directory listing
+### Step 2: Update `index.html`
+- Add a switch camera button (🔄) in the camera controls area
+- Position it next to the capture button
 
-## Files to Create
-1. app.py - Flask backend
-2. requirements.txt - Dependencies
-3. static/css/style.css - Styles
-4. static/js/camera.js - Camera logic
-5. templates/index.html - Capture page
-6. templates/view.html - View page
-7. README.md - Documentation
-8. DEPLOYMENT.md - Deployment guide
+### Step 3: Update `style.css`
+- Add styling for the switch camera button
+- Make it visually consistent with existing buttons
+
+## Dependent Files to be Edited
+1. `static/js/camera.js` - Main logic changes
+2. `templates/index.html` - Add switch button
+3. `static/css/style.css` - Add button styling
+
+## Followup Steps
+1. Test the implementation on a device with both front and back cameras
+2. Verify camera switching works correctly
+3. Ensure QR code generation still works after capturing from either camera
+

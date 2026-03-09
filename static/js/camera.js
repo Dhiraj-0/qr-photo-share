@@ -10,6 +10,8 @@ let selectedFile = null;
 let currentImageUrl = null;
 let currentQrCode = null;
 let currentMode = 'camera'; // 'camera' or 'gallery'
+let currentFacingMode = 'environment'; // 'environment' = back camera, 'user' = front camera
+let hasMultipleCameras = false;
 
 // DOM Elements
 const video = document.getElementById('video');
@@ -30,6 +32,7 @@ const cameraModeBtn = document.getElementById('cameraModeBtn');
 const galleryModeBtn = document.getElementById('galleryModeBtn');
 const cameraControls = document.getElementById('cameraControls');
 const galleryControls = document.getElementById('galleryControls');
+const switchCameraBtn = document.getElementById('switchCameraBtn');
 
 /**
  * Initialize camera when page loads
@@ -38,15 +41,22 @@ document.addEventListener('DOMContentLoaded', initCamera);
 
 /**
  * Initialize the camera
+ * @param {string} facingMode - 'environment' for back camera, 'user' for front camera
  */
-async function initCamera() {
+async function initCamera(facingMode = 'environment') {
     showStatus('Requesting camera access...', 'info');
     
+    // Stop any existing stream
+    stopCameraStream();
+    
+    // Update current facing mode
+    currentFacingMode = facingMode;
+    
     try {
-        // Request camera access - prefer back camera on mobile
+        // Request camera access with specified facing mode
         const constraints = {
             video: {
-                facingMode: { ideal: 'environment' },
+                facingMode: { ideal: facingMode },
                 width: { ideal: 1280 },
                 height: { ideal: 720 }
             }
@@ -65,7 +75,14 @@ async function initCamera() {
             };
         });
         
-        showStatus('Camera ready! Position your shot and click capture.', 'success');
+        // Check for multiple cameras after getting stream
+        await checkMultipleCameras();
+        
+        // Update button visibility based on camera availability
+        updateCameraSwitchButton();
+        
+        const cameraName = facingMode === 'environment' ? 'back' : 'front';
+        showStatus(`${cameraName.charAt(0).toUpperCase() + cameraName.slice(1)} camera ready! Position your shot and click capture.`, 'success');
         captureBtn.disabled = false;
         
     } catch (err) {
@@ -84,6 +101,56 @@ async function initCamera() {
         
         showStatus(errorMessage, 'error');
     }
+}
+
+/**
+ * Check if device has multiple cameras
+ */
+async function checkMultipleCameras() {
+    try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+        hasMultipleCameras = videoDevices.length > 1;
+        console.log('Available cameras:', videoDevices.length);
+    } catch (err) {
+        console.error('Error checking cameras:', err);
+        hasMultipleCameras = false;
+    }
+}
+
+/**
+ * Update camera switch button visibility
+ */
+function updateCameraSwitchButton() {
+    if (switchCameraBtn) {
+        // Show button only if multiple cameras are available
+        switchCameraBtn.style.display = hasMultipleCameras ? 'inline-flex' : 'none';
+    }
+}
+
+/**
+ * Switch between front and back cameras
+ */
+function switchCamera() {
+    if (!hasMultipleCameras) {
+        showStatus('Only one camera available on this device.', 'info');
+        return;
+    }
+    
+    // Toggle between front and back camera
+    const newFacingMode = currentFacingMode === 'environment' ? 'user' : 'environment';
+    
+    // Show capture button and hide retake/upload when switching
+    captureBtn.style.display = 'inline-block';
+    retakeBtn.style.display = 'none';
+    uploadBtn.style.display = 'none';
+    
+    // Clear previous capture if any
+    capturedImage = null;
+    cameraContainer.classList.remove('captured');
+    
+    // Initialize camera with new facing mode
+    initCamera(newFacingMode);
 }
 
 /**
@@ -437,6 +504,9 @@ if (uploadBtn) {
 }
 if (fileInput) {
     fileInput.addEventListener('change', handleFileSelect);
+}
+if (switchCameraBtn) {
+    switchCameraBtn.addEventListener('click', switchCamera);
 }
 
 // Clean up on page unload
