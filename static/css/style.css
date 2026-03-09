@@ -200,6 +200,16 @@ body {
     box-shadow: 0 8px 25px rgba(23, 162, 184, 0.5);
 }
 
+/* Switch Camera Button */
+.switch-camera-btn {
+    background: #6c757d;
+    box-shadow: 0 5px 20px rgba(108, 117, 125, 0.4);
+}
+
+.switch-camera-btn:hover:not(:disabled) {
+    box-shadow: 0 8px 25px rgba(108, 117, 125, 0.5);
+}
+
 /* Status Message */
 .status {
     text-align: center;
